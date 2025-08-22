@@ -1,0 +1,76 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SharpStudioWpf">
+    <Style x:Key="BasicWindowButton" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"></ContentPresenter>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#40FFFFFF" />
+                            <Setter Property="Foreground" Value="#FFFFFF" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width" Value="46" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="#40FFFFFF" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+    </Style>
+    <Style x:Key="MarginLeftOne" TargetType="Button" BasedOn="{StaticResource BasicWindowButton}">
+        <Setter Property="Margin" Value="1,0,0,0" />
+    </Style>
+    <Style x:Key="HoverRed" TargetType="Button" BasedOn="{StaticResource MarginLeftOne}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="Red" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="BasicWindowPathStyle" TargetType="Path">
+        <Setter Property="Width" Value="10" />
+        <Setter Property="Height" Value="10" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Stretch" Value="Uniform" />
+        <Setter Property="RenderOptions.EdgeMode" Value="Aliased" />
+    </Style>
+    <Style x:Key="RestorePath" TargetType="Path" BasedOn="{StaticResource BasicWindowPathStyle}">
+        <Setter Property="Data" Value="M1,1L1,11 11,11 11,1z M0,0L12,0 12,12 0,12z" />
+        <Style.Triggers>
+            <DataTrigger
+                Binding="{Binding RelativeSource={RelativeSource AncestorType=local:MainWindow}, Path=WindowState}"
+                Value="Maximized">
+                <Setter Property="Data"
+                        Value="M1,4.56L1,14.56 11,14.56 11,4.56z M4,1L4,3.56 12,3.56 12,11 14,11 14,1z M3,0L15,0 15,12 12,12 12,15.56 0,15.56 0,3.56 3,3.56z" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <ControlTemplate x:Key="WindowButtonGroupTemplate" TargetType="{x:Type local:WindowButtonGroup}">
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="PART_Min" Style="{StaticResource BasicWindowButton}">
+                <Path Style="{StaticResource BasicWindowPathStyle}" Data="M0,0L10,0 10,1 10,1 1,1 0,1z" />
+            </Button>
+            <Button x:Name="PART_Max" Style="{StaticResource MarginLeftOne}">
+                <Path Style="{StaticResource RestorePath}" />
+            </Button>
+            <Button x:Name="PART_Close" Style="{StaticResource HoverRed}">
+                <Path Style="{StaticResource BasicWindowPathStyle}"
+                    Data="F1M8.583,8L13,12.424 12.424,13 8,8.583 3.576,13 3,12.424 7.417,8 3,3.576 3.576,3 8,7.417 12.424,3 13,3.576z" />
+            </Button>
+        </StackPanel>
+    </ControlTemplate>
+    <Style TargetType="{x:Type local:WindowButtonGroup}">
+        <Setter Property="Template" Value="{StaticResource WindowButtonGroupTemplate}"></Setter>
+    </Style>
+</ResourceDictionary>

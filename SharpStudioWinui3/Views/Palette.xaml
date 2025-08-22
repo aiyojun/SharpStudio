@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<UserControl x:Class="SharpStudioWinui3.Views.Palette"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Canvas x:Name="Container" IsTabStop="True" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            SizeChanged="OnChessboardLayerLoaded"
+            KeyDown="OnKeyDown" PointerWheelChanged="OnMouseWheel" PointerPressed="OnMouseDown" PointerMoved="OnMouseMove" PointerReleased="OnMouseUp">
+        <Canvas x:Name="ChessboardLayer" Background="Coral" Canvas.ZIndex="0" Canvas.Left="0" Canvas.Top="0" Loaded="OnChessboardLayerLoaded"/>
+        <Canvas x:Name="BackgroundLayer" Background="DarkSeaGreen" Canvas.ZIndex="1" Canvas.Left="0" Canvas.Top="0">
+            <Image x:Name="BackgroundImage" Source="{x:Bind Source}" ImageOpened="OnBackgroundImageOpened" />
+        </Canvas>
+        <Canvas x:Name="ShapeViewsLayer" Background="SkyBlue" Canvas.ZIndex="2" Canvas.Left="0" Canvas.Top="0" />
+    </Canvas>
+</UserControl>

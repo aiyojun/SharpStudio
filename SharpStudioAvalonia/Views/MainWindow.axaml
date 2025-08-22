@@ -1,0 +1,118 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SharpStudioAvalonia.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:SharpStudioAvalonia.Views"
+        mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="640"
+        x:Class="SharpStudioAvalonia.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        ExtendClientAreaChromeHints="SystemChrome"
+        ExtendClientAreaToDecorationsHint="True"
+        SystemDecorations="BorderOnly"
+        Width="960" Height="640"
+        Icon="/Assets/logo-1.ico"
+        Title="SharpStudioAvalonia">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="Path.Dock">
+            <Setter Property="Width" Value="18" />
+            <Setter Property="Height" Value="18" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Fill" Value="Transparent" />
+            <Setter Property="StrokeThickness" Value="1.5" />
+            <Setter Property="Stroke"
+                    Value="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+            <Setter Property="Stretch" Value="Uniform" />
+        </Style>
+        <Style Selector="TextBlock.Dock">
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style Selector="Button.Dock">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              Content="{TemplateBinding Content}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Margin" Value="0, 5" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="#9599E2" />
+            </Style>
+        </Style>
+    </Window.Styles>
+
+    <Border Background="#434343">
+        <Grid x:Name="Root">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Height="40" Background="Transparent">
+                <views:XTitleBar />
+            </Grid>
+            <DockPanel Grid.Row="1" LastChildFill="True">
+                <Grid DockPanel.Dock="Bottom" Height="24">
+                    <TextBlock Text="Analysis Detection ..." Padding="10, 0" VerticalAlignment="Center" FontSize="10" />
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Vertical" Width="40" HorizontalAlignment="Center">
+                        <Button Classes="Dock" ToolTip.Tip="实时检测">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Path Classes="Dock"
+                                      Data="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M8 7v10M12 7v10M17 7v10" />
+                                <!-- <TextBlock Margin="0, 10, 0, 0" FontSize="12" Text="实时检测" /> -->
+                            </StackPanel>
+                        </Button>
+                        <Button Classes="Dock" ToolTip.Tip="历史数据">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Path Classes="Dock"
+                                      Data="M3,5a9,3 0 1,0 18,0a9,3 0 1,0 -18,0M3 5V19A9 3 0 0 0 21 19V5M3 12A9 3 0 0 0 21 12" />
+                                <!-- <TextBlock Margin="0, 10, 0, 0" FontSize="12" Text="历史数据" /> -->
+                            </StackPanel>
+                        </Button>
+                        <Button Classes="Dock" ToolTip.Tip="后处理">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Path Classes="Dock"
+                                      Data="M3 5a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2zM7 11v4a2 2 0 0 0 2 2h4M13 15a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2z" />
+                                <!-- <TextBlock Margin="0, 10, 0, 0" FontSize="12" Text="后处理" /> -->
+                            </StackPanel>
+                        </Button>
+                        <!-- <Button Classes="Dock" ToolTip.Tip="历史数据"> -->
+                        <!--     <Path Classes="Dock" Data="M3,5a9,3 0 1,0 18,0a9,3 0 1,0 -18,0M3 5V19A9 3 0 0 0 21 19V5M3 12A9 3 0 0 0 21 12"/> -->
+                        <!-- </Button> -->
+                        <!-- <Button Classes="Dock" ToolTip.Tip="后处理"> -->
+                        <!--     <Path Classes="Dock" Data="M3 5a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2zM7 11v4a2 2 0 0 0 2 2h4M13 15a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2z"/> -->
+                        <!-- </Button> -->
+                    </StackPanel>
+                    <views:Palette Grid.Column="1"
+                                   Source="C:/Users/jun.dai/Pictures/Saved Pictures/bloom-windows-11-4500x3000-11486.jpg" />
+                </Grid>
+            </DockPanel>
+
+        </Grid>
+    </Border>
+
+</Window>

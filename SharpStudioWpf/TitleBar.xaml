@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="SharpStudioWpf.TitleBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SharpStudioWpf"
+             xmlns:controlzex="urn:controlzex"
+             mc:Ignorable="d"
+             d:DesignHeight="36" d:DesignWidth="480">
+    <Border Height="36">
+        <!-- controlzex:NonClientControlProperties.HitTestResult="CAPTION" -->
+        <Grid Height="36">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="0"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Background="Transparent" MouseLeftButtonDown="OnDraggingTitleBar">
+                <Border Width="40" Height="36">
+                    <Path Width="24" Height="24" Stretch="Uniform" 
+                          HorizontalAlignment="Center" VerticalAlignment="Center" Fill="#9599E2" 
+                          Data="M80.3984 72.2003V39C117.07 39 146.798 68.7278 146.798 105.399H113.598C113.597 87.0639 98.7337 72.2004 80.3984 72.2003ZM47.1995 55.6006H14C14 92.2719 43.7278 122 80.3991 122V88.7994C62.0638 88.7993 47.2 73.9358 47.1995 55.6006Z">
+                    </Path>
+                </Border>
+        
+                <Label VerticalAlignment="Center" FontWeight="Bold" FontSize="14" Foreground="#EEE">Deep Studio</Label>
+            </StackPanel>
+            <local:WindowButtonGroup Grid.Column="1" MinWidth="138" controlzex:WindowChrome.IsHitTestVisibleInChrome="True"></local:WindowButtonGroup>
+        </Grid>
+    </Border>
+    
+</UserControl>

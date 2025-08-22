@@ -1,0 +1,62 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:SharpStudioAvalonia.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="40"
+             PointerPressed="InputElement_OnPointerPressed"
+             x:Class="SharpStudioAvalonia.Views.XTitleBar"
+             x:DataType="views:XTitleBar">
+    <UserControl.Styles>
+        <Style Selector="Button.Normal">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="Margin" Value="1,0,0,0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="#40FFFFFF"/>
+            </Style>
+        </Style>
+        <Style Selector="Button.CloseWindow:pointerover">
+            <Setter Property="Background" Value="#FF1A1A"/>
+        </Style>
+    </UserControl.Styles>
+    
+    <Grid Background="Transparent">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <PathIcon Width="32" Height="32" Margin="4, 0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#9599E2" 
+                  Data="M80.3984 72.2003V39C117.07 39 146.798 68.7278 146.798 105.399H113.598C113.597 87.0639 98.7337 72.2004 80.3984 72.2003ZM47.1995 55.6006H14C14 92.2719 43.7278 122 80.3991 122V88.7994C62.0638 88.7993 47.2 73.9358 47.1995 55.6006Z">
+            </PathIcon>
+            <TextBlock VerticalAlignment="Center" Margin="5, 0" FontSize="16" FontWeight="Bold">Deep Studio</TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+        </StackPanel>
+        <StackPanel Grid.Column="2" Orientation="Horizontal">
+            <Button Classes="Normal" Click="OnMinimizeClicked">
+                <PathIcon Width="10" Height="10" RenderOptions.EdgeMode="Aliased" Data="M0,0L10,0 10,1 10,1 1,1 0,1z" />
+            </Button>
+            <Button Classes="Normal" Click="OnMaximizeClicked">
+                <PathIcon Width="9" Height="9" RenderOptions.EdgeMode="Aliased" Data="{Binding RelativeSource={RelativeSource AncestorType=views:XTitleBar},Path=MiddleButton}"/>
+            </Button>
+            <Button Classes="Normal CloseWindow" Click="OnCloseClicked">
+                <PathIcon Width="9" Height="9" RenderOptions.EdgeMode="Aliased" Data="F1M8.583,8L13,12.424 12.424,13 8,8.583 3.576,13 3,12.424 7.417,8 3,3.576 3.576,3 8,7.417 12.424,3 13,3.576z" />
+            </Button>
+        </StackPanel>
+    </Grid>
+    
+</UserControl>

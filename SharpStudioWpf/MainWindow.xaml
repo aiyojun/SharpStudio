@@ -1,0 +1,45 @@
+﻿<controlzex:WindowChromeWindow x:Class="SharpStudioWpf.MainWindow"
+                               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                               xmlns:controlzex="urn:controlzex"
+                               mc:Ignorable="d"
+                               xmlns:local="clr-namespace:SharpStudioWpf;assembly="
+                               xmlns:editor="clr-namespace:SharpStudioWpf.Editor"
+                               Icon="Assets/logo-1.ico"
+                               WindowState="Normal"
+                               SizeToContent="Manual"
+                               Topmost="False"
+                               Title="MainWindow" Width="960" Height="640" MinWidth="200"
+                               Foreground="{DynamicResource App.Brushes.Foreground}"
+                               Background="{DynamicResource App.Brushes.Background}"
+                               d:DataContext="{d:DesignInstance local:MainWindow}">
+
+    <DockPanel LastChildFill="True" Background="{Binding Background}">
+        <local:TitleBar DockPanel.Dock="Top" BorderThickness="0,0,0,1"
+                        BorderBrush="{DynamicResource App.Brushes.Border}" Background="{Binding Background}" />
+        <local:StatusBar DockPanel.Dock="Bottom" Height="24" Padding="5,0" BorderThickness="0,1,0,0"
+                         BorderBrush="{DynamicResource App.Brushes.Border}" />
+        <!-- <Border DockPanel.Dock="Bottom" Height="24" Padding="10,0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource App.Brushes.Border}"> -->
+        <!-- <TextBlock VerticalAlignment="Center" Text="Powered by JQS" FontSize="10" Foreground="{DynamicResource App.Brushes.Comment}"/> -->
+        <!-- </Border> -->
+        <DockPanel LastChildFill="True">
+            <local:Docker DockPanel.Dock="Left" BorderThickness="0,0,1,0"
+                          BorderBrush="{DynamicResource App.Brushes.Border}" />
+            <Grid>
+                <Rectangle Panel.ZIndex="0" Fill="{StaticResource CheckerboardBrush}" />
+                <editor:Palette Panel.ZIndex="1" Source="D:\d4jqs\SharpStudioWpf\chessboard.png" Layout="Contain"
+                                Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=Grid}}"
+                                Height="{Binding ActualHeight,RelativeSource={RelativeSource AncestorType=Grid}}" />
+                <!-- <Grid Panel.ZIndex="1"> -->
+                <!-- </Grid> -->
+            </Grid>
+        </DockPanel>
+    </DockPanel>
+    
+    <!-- <Grid Background="{Binding Background}"> -->
+    <!-- -->
+    <!-- </Grid> -->
+    <!-- </Border> -->
+</controlzex:WindowChromeWindow>

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SharpStudioWinui3 (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "SharpStudioWinui3 (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

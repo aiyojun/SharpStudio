@@ -1,0 +1,21 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:controls="clr-namespace:SharpStudioAvalonia.Controls"
+             Loaded="Control_OnLoaded"
+             x:Class="SharpStudioAvalonia.Views.Palette">
+    <Canvas x:Name="Container" Background="AliceBlue" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ClipToBounds="True" IsTabStop="True"
+            PointerPressed="OnMouseDown" PointerMoved="OnMouseMove" PointerReleased="OnMouseUp" PointerWheelChanged="OnMouseWheel" KeyDown="OnKeyDown">
+        <controls:Chessboard Width="{Binding RelativeSource={RelativeSource AncestorType=Canvas},Path=Bounds.Width}"
+                             Height="{Binding RelativeSource={RelativeSource AncestorType=Canvas},Path=Bounds.Height}"/>
+        <Canvas x:Name="ImageLayer" Background="DarkSeaGreen" ZIndex="1" >
+            <Image x:Name="TargetImage"
+                   RenderOptions.BitmapInterpolationMode="None"
+                   Loaded="TargetImage_OnLoaded"/>
+        </Canvas>
+        <Canvas x:Name="ShapeLayer" Background="SkyBlue" ZIndex="2" />
+    </Canvas>
+</UserControl>
