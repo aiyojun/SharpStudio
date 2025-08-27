@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpStudioWinui3", "SharpS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpStudioAvalonia", "SharpStudioAvalonia\SharpStudioAvalonia.csproj", "{97F5FA9E-AD5E-4E59-A306-1112A32E0E76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mathematics", "Mathematics\Mathematics.csproj", "{31B126D6-458E-44C8-9581-E7CE6BF9368E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{97F5FA9E-AD5E-4E59-A306-1112A32E0E76}.Release|x64.Build.0 = Release|Any CPU
 		{97F5FA9E-AD5E-4E59-A306-1112A32E0E76}.Release|x86.ActiveCfg = Release|Any CPU
 		{97F5FA9E-AD5E-4E59-A306-1112A32E0E76}.Release|x86.Build.0 = Release|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Debug|x64.Build.0 = Debug|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Debug|x86.Build.0 = Debug|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Release|x64.ActiveCfg = Release|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Release|x64.Build.0 = Release|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Release|x86.ActiveCfg = Release|Any CPU
+		{31B126D6-458E-44C8-9581-E7CE6BF9368E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,7 @@
+using System;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace SharpStudioAvalonia.Views;
 
@@ -20,4 +23,30 @@ public partial class MainWindow : Window
         //     }
         // }));
     }
+    
+    public static readonly StyledProperty<string> CurrentModuleNameProperty = AvaloniaProperty.Register<MainWindow, string>(nameof(CurrentModuleName));
+
+    public string CurrentModuleName
+    {
+        get => GetValue(CurrentModuleNameProperty);
+        set => SetValue(CurrentModuleNameProperty, value);
+    }
+
+    private void OnDockButtonClick(object sender, RoutedEventArgs e)
+    {
+        Console.WriteLine($"sender {sender}");
+        if (Equals(sender, ModuleInspection))
+        {
+            ContentControl.Content = new Palette { Source = "C:/Users/jun.dai/Pictures/Saved Pictures/bloom-windows-11-4500x3000-11486.jpg" };  // new TextBlock { Text = "检测模块" };
+        }
+        else if (Equals(sender, ModuleHistory))
+        {
+            ContentControl.Content = new TextBlock { Text = "历史模块" };
+        }
+        else if (Equals(sender, ModulePostprocess))
+        {
+            ContentControl.Content = new Flowchart();
+        }
+    }
+    
 }

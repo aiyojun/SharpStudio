@@ -3,8 +3,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:SharpStudioAvalonia.Views"
+             xmlns:converters="clr-namespace:SharpStudioAvalonia.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="40"
-             PointerPressed="InputElement_OnPointerPressed"
+             PointerPressed="OnMouseDown"
              x:Class="SharpStudioAvalonia.Views.XTitleBar"
              x:DataType="views:XTitleBar">
     <UserControl.Styles>
@@ -32,6 +33,10 @@
         </Style>
     </UserControl.Styles>
     
+    <UserControl.Resources>
+        <converters:WindowStateToPathConverter x:Key="WindowStateToPathConverter"/>
+    </UserControl.Resources>
+    
     <Grid Background="Transparent">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -51,7 +56,7 @@
                 <PathIcon Width="10" Height="10" RenderOptions.EdgeMode="Aliased" Data="M0,0L10,0 10,1 10,1 1,1 0,1z" />
             </Button>
             <Button Classes="Normal" Click="OnMaximizeClicked">
-                <PathIcon Width="9" Height="9" RenderOptions.EdgeMode="Aliased" Data="{Binding RelativeSource={RelativeSource AncestorType=views:XTitleBar},Path=MiddleButton}"/>
+                <PathIcon Width="9" Height="9" RenderOptions.EdgeMode="Aliased" Data="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=WindowState,Converter={StaticResource WindowStateToPathConverter}}"/>
             </Button>
             <Button Classes="Normal CloseWindow" Click="OnCloseClicked">
                 <PathIcon Width="9" Height="9" RenderOptions.EdgeMode="Aliased" Data="F1M8.583,8L13,12.424 12.424,13 8,8.583 3.576,13 3,12.424 7.417,8 3,3.576 3.576,3 8,7.417 12.424,3 13,3.576z" />
