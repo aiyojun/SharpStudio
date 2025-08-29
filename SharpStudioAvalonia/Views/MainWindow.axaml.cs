@@ -2,6 +2,8 @@ using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 
 namespace SharpStudioAvalonia.Views;
 
@@ -24,7 +26,7 @@ public partial class MainWindow : Window
         // }));
     }
     
-    public static readonly StyledProperty<string> CurrentModuleNameProperty = AvaloniaProperty.Register<MainWindow, string>(nameof(CurrentModuleName));
+    public static readonly StyledProperty<string> CurrentModuleNameProperty = AvaloniaProperty.Register<MainWindow, string>(nameof(CurrentModuleName), "");
 
     public string CurrentModuleName
     {
@@ -37,7 +39,7 @@ public partial class MainWindow : Window
         Console.WriteLine($"sender {sender}");
         if (Equals(sender, ModuleInspection))
         {
-            ContentControl.Content = new Palette { Source = "C:/Users/jun.dai/Pictures/Saved Pictures/bloom-windows-11-4500x3000-11486.jpg" };  // new TextBlock { Text = "检测模块" };
+            ContentControl.Content = new Palette { Source = new Bitmap(AssetLoader.Open(new Uri("avares://SharpStudioAvalonia/Assets/chessboard.png"))) };  // new TextBlock { Text = "检测模块" };
         }
         else if (Equals(sender, ModuleHistory))
         {

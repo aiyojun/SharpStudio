@@ -8,7 +8,7 @@
              Loaded="Control_OnLoaded"
              x:Class="SharpStudioAvalonia.Views.Palette">
     <Canvas x:Name="Container" Background="AliceBlue" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ClipToBounds="True" IsTabStop="True"
-            PointerPressed="OnMouseDown" PointerMoved="OnMouseMove" PointerReleased="OnMouseUp" PointerWheelChanged="OnMouseWheel" KeyDown="OnKeyDown">
+            PointerPressed="OnMouseDown" PointerMoved="OnMouseMove" PointerReleased="OnMouseUp" PointerWheelChanged="OnMouseWheel">
         <controls:Chessboard Width="{Binding RelativeSource={RelativeSource AncestorType=Canvas},Path=Bounds.Width}"
                              Height="{Binding RelativeSource={RelativeSource AncestorType=Canvas},Path=Bounds.Height}"/>
         <Canvas x:Name="ImageLayer" Background="DarkSeaGreen" ZIndex="1" >

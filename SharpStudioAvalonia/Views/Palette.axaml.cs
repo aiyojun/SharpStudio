@@ -3,20 +3,22 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.VisualTree;
 using SharpStudioAvalonia.Editor;
 
 namespace SharpStudioAvalonia.Views;
 
 public partial class Palette : UserControl
 {
-    public static readonly StyledProperty<string> SourceProperty = AvaloniaProperty.Register<Palette, string>(nameof (Source));
-    public string Source
+    public static readonly StyledProperty<IImage?> SourceProperty = AvaloniaProperty.Register<Palette, IImage?>(nameof (Source));
+    public IImage? Source
     {
         get => GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
-    
+
     private readonly ImageLayer _imageLayer;
     private readonly ShapeLayer _shapeLayer;
     private readonly ViewportMatrix2D _viewport = new();
@@ -30,7 +32,19 @@ public partial class Palette : UserControl
         InitializeComponent();
         _imageLayer = new ImageLayer(ImageLayer, Container, TargetImage, _viewport);
         _shapeLayer = new ShapeLayer(ShapeLayer, Container, _viewport);
+
+
+        Loaded += (_, _) =>
+        {
+            if (window != null)
+            {
+                Console.WriteLine($" Window {window}");
+                window!.KeyDown += OnKeyDown;
+            }
+        };
     }
+
+    private Window? window => this.GetVisualRoot() as Window;
     
     private void OnMouseWheel(object sender, PointerWheelEventArgs e)
     {
@@ -242,9 +256,9 @@ public partial class Palette : UserControl
     private void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {
         Console.WriteLine($"TargetImage_OnLoaded {Source}");
-        if (Source != "")
+        if (Source != null)
         {
-            TargetImage.Source = new Bitmap(Source);
+            TargetImage.Source = Source;
             _imageLayer.SetupImageLayout(ImageLayout.Cover);
         }
     }

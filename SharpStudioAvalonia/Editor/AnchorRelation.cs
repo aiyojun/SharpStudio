@@ -127,7 +127,7 @@ public sealed class AnchorRelation : INotifyPropertyChanged, IDisposable
                 { 
                     Width = AnchorRadius * 2, 
                     Height = AnchorRadius * 2, 
-                    Fill = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0xff))  // new BrushConverter().ConvertFrom("#0000ff") as Brush,
+                    Fill = new SolidColorBrush(Colors.DodgerBlue)  // new BrushConverter().ConvertFrom("#0000ff") as Brush,
                 };
                 _parent.Children.Add(view);
                 _views.Add(view);

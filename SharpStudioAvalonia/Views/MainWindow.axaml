@@ -11,6 +11,7 @@
         ExtendClientAreaToDecorationsHint="True"
         SystemDecorations="BorderOnly"
         Width="960" Height="640"
+        Foreground="#eee"
         Icon="/Assets/logo-1.ico"
         Title="SharpStudioAvalonia">
 
@@ -110,7 +111,8 @@
                     
                     
                     <ContentControl x:Name="ContentControl" Grid.Column="1">
-                        <views:Palette Source="C:/Users/jun.dai/Documents/GitHub/SharpStudio/SharpStudioWpf/chessboard.png" />    
+                        <views:Flowchart></views:Flowchart>
+                        <!-- <views:Palette Source="C:/Users/jun.dai/Documents/GitHub/SharpStudio/SharpStudioWpf/chessboard.png" />     -->
                     </ContentControl>
                 </Grid>
             </DockPanel>

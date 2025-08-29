@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SharpStudioAvalonia.Views.Flowchart">
-    <Canvas x:Name="Container" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#333" ClipToBounds="True"
+    <Canvas x:Name="Container" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#333" ClipToBounds="True" Focusable="True"
             PointerPressed="OnMouseDown" PointerMoved="OnMouseMove" PointerReleased="OnMouseUp" PointerWheelChanged="OnWheel">
         <Canvas x:Name="EdgeLayer"/>
         <Canvas x:Name="NodeLayer"/>

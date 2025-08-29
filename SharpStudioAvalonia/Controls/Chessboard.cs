@@ -19,7 +19,6 @@ public class Chessboard : Control
         base.Render(context);
         var iWidth = Bounds.Width;
         var iHeight = Bounds.Height;
-        // Console.WriteLine($"Chessboard width : {iWidth} , Chessboard height : {iHeight}");
         for (var y = 0; y < iHeight; y += Tile)
         {
             for (var x = 0; x < iWidth; x += Tile)
