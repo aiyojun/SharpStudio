@@ -3,4 +3,5 @@
 Prototype application for build C# desktop application.
 
 
-![SharpStudio](./SharpStudioAvaloniaApp.png)
+![SharpStudio-Annotation](./SharpStudioAvaloniaApp.png)
+![SharpStudio-Workflow](./SharpStudioAvaloniaAppWorkflow.png)
