@@ -112,8 +112,8 @@
                     
                     
                     <ContentControl x:Name="ContentControl" Grid.Column="1">
-                        <views:Flowchart></views:Flowchart>
-                        <!-- <lumen:Tablet Source="D:/GitHub/SharpStudio/SharpStudioWpf/chessboard.png" />     -->
+                        <views:Flowchart />
+                        <!-- <lumen:Tablet /> -->
                     </ContentControl>
                 </Grid>
             </DockPanel>

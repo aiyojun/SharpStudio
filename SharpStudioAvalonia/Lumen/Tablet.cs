@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Collections;
@@ -18,16 +19,18 @@ public class Tablet : Control
 {
     public static readonly StyledProperty<int> TileProperty = AvaloniaProperty.Register<Tablet, int>(nameof(Tile), 15);
 
+    public static readonly StyledProperty<IList<ReactiveShape>> ShapesProperty = AvaloniaProperty.Register<Tablet, IList<ReactiveShape>>(nameof(Shapes), new AvaloniaList<ReactiveShape>());
+    
     public static readonly StyledProperty<IImage?> SourceProperty = AvaloniaProperty.Register<Tablet, IImage?>(nameof(Source));
     
     public static readonly StyledProperty<ImageLayout> ImageLayoutProperty = AvaloniaProperty.Register<Tablet, ImageLayout>(nameof(ImageLayout), ImageLayout.Cover);
-
+    
     public int Tile
     {
         get => GetValue(TileProperty);
         set => SetValue(TileProperty, value);
     }
-
+    
     public IImage? Source
     {
         get => GetValue(SourceProperty);
@@ -39,8 +42,13 @@ public class Tablet : Control
         get => GetValue(ImageLayoutProperty);
         set => SetValue(ImageLayoutProperty, value);
     }
+    
+    public IList<ReactiveShape> Shapes
+    {
+        get => GetValue(ShapesProperty);
+        set => SetValue(ShapesProperty, value);
+    }
 
-    private double _buttons;
     private double _cursorStartX;
     private double _cursorStartY;
     private const double AnchorRadius = 5;
@@ -50,12 +58,10 @@ public class Tablet : Control
     private DrawAction _drawAction = DrawAction.None;
     private DrawMode _drawMode = DrawMode.DrawRectangle;
 
-    private readonly AvaloniaList<ReactiveShape> _shapes =
-    [
-        new ReactiveRectangle { X = 300, Y = 500, Width = 100, Height = 60, Color = "#55ffff", Id = "xxxx", Label = "Defect" },
-        new ReactiveCircle { X = 500, Y = 200, Radius = 60, Color = "#ffff55", Id = "xxxx", Label = "Defect" },
-        new ReactivePolygon { Points = [new Mathematics.d2.Point(50, 50), new Mathematics.d2.Point(150, 250), new Mathematics.d2.Point(70, 170)], Color = "#ff55ee", Id = "xxxx", Label = "Defect" }
-    ];
+    static Tablet()
+    {
+        AffectsRender<Tablet>(SourceProperty, TileProperty, ShapesProperty, ImageLayoutProperty);
+    }
 
     public Tablet()
     {
@@ -123,7 +129,7 @@ public class Tablet : Control
         }
 
         const string defaultColor = "#eeeeee";
-        foreach (var shape in _shapes)
+        foreach (var shape in Shapes)
         {
             var pen = new Pen(ConvertColor(shape.Color ?? defaultColor));
             if (shape is ReactiveCircle circle)
@@ -170,12 +176,11 @@ public class Tablet : Control
         {
             var selectedShapeIndex = InShape(coord);
             var selectedAnchorIndex = InAnchor(coord);
-            _buttons = 1;
             if (withCtrl)
             {
                 var index = InShape(coord);
-                if (index > -1 && index < _shapes.Count)
-                    _anchorGroup = new AnchorGroup(index, _shapes[index]);
+                if (index > -1 && index < Shapes.Count)
+                    _anchorGroup = new AnchorGroup(index, Shapes[index]);
                 else
                     _anchorGroup = null;
             }
@@ -199,7 +204,7 @@ public class Tablet : Control
                 {
                     var shape = new ReactiveRectangle
                         { X = coord.X, Y = coord.Y, Width = 0, Height = 0, Label = "", Color = "5555ff" };
-                    _shapes.Add(shape);
+                    Shapes.Add(shape);
                     _shape = new Tuple<ReactiveShape, ReactiveShape>(shape,
                         new ReactiveRectangle { X = shape.X, Y = shape.Y, Width = shape.Width, Height = shape.Height });
                     _drawAction = DrawAction.DrawShape;
@@ -208,7 +213,7 @@ public class Tablet : Control
                 {
                     var shape = new ReactiveCircle
                         { X = coord.X, Y = coord.Y, Radius = 0, Label = "", Color = "5555ff" };
-                    _shapes.Add(shape);
+                    Shapes.Add(shape);
                     _shape = new Tuple<ReactiveShape, ReactiveShape>(shape,
                         new ReactiveCircle { X = shape.X, Y = shape.Y, Radius = shape.Radius });
                     _drawAction = DrawAction.DrawShape;
@@ -221,7 +226,7 @@ public class Tablet : Control
                         {
                             Points = [coord, new Mathematics.d2.Point(coord.X, coord.Y)], Label = "", Color = "5555ff"
                         };
-                        _shapes.Add(polygon);
+                        Shapes.Add(polygon);
                         _shape = new Tuple<ReactiveShape, ReactiveShape>(polygon, polygon);
                     }
                     else
@@ -234,14 +239,13 @@ public class Tablet : Control
         }
         else if (cursorProps.IsRightButtonPressed)
         {
-            _buttons = 2;
             if (_drawMode == DrawMode.DrawPolygon)
             {
                 if (_shape != null)
                 {
                     var polygon = _shape!.Item1 as ReactivePolygon;
                     if (polygon!.Points.Count - 1 < 3)
-                        _shapes.Remove(polygon);
+                        Shapes.Remove(polygon);
                     else
                         polygon.PopBack();
                 }
@@ -251,7 +255,6 @@ public class Tablet : Control
         }
         else if (cursorProps.IsMiddleButtonPressed)
         {
-            _buttons = 4;
             _camera.Save(cursor.ToD2Point());
             _drawAction = DrawAction.DragPalette;
         }
@@ -264,11 +267,6 @@ public class Tablet : Control
         var cursorPoint = e.GetCurrentPoint(this);
         var cursor = cursorPoint.Position;
         var matrix = Transform;
-        // if (!matrix.TryInvert(out var inv))
-        // {
-        //     Console.WriteLine($"Matrix {matrix.M11} {matrix.M22} {matrix.M31} {matrix.M32}");
-        //     return;
-        // }
         var inv = matrix.Invert();
         var coord = inv.Transform(cursor).ToD2Point();
         if (_drawAction == DrawAction.DragPalette)
@@ -325,7 +323,7 @@ public class Tablet : Control
         {
             if (_drawAction == DrawAction.DrawShape && _drawMode is DrawMode.DrawRectangle or DrawMode.DrawCircle)
             {
-                _shapes.Remove(_shape!.Item1);
+                Shapes.Remove(_shape!.Item1);
             }
         }
 
@@ -368,9 +366,9 @@ public class Tablet : Control
 
     private int InShape(Mathematics.d2.Point point)
     {
-        for (var i = _shapes.Count - 1; i >= 0; i--)
+        for (var i = Shapes.Count - 1; i >= 0; i--)
         {
-            var shape = _shapes[i];
+            var shape = Shapes[i];
             var inArea = shape switch
             {
                 ReactiveRectangle rectangle => ShapeTools.InRectangle(point, rectangle),
