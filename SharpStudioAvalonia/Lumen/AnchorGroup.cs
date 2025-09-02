@@ -4,19 +4,13 @@ using Mathematics.d2;
 
 namespace SharpStudioAvalonia.Lumen;
 
-public class AnchorGroup
+public class AnchorGroup(int index, ReactiveShape shape)
 {
-    public readonly int Index;
-    public readonly ReactiveShape Shape;
+    public readonly int Index = index;
+    public readonly ReactiveShape Shape = shape;
     private int _selectedIndex = -1;
     public ReactiveShape? CachedShape;
 
-    public AnchorGroup(int index, ReactiveShape shape)
-    {
-        Index = index;
-        Shape = shape;
-    }
-    
     public List<Point> Anchors => Shape switch
     {
         ReactiveRectangle rectangle => Enumerable.Range(0, 9)
