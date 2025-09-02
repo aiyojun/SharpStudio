@@ -2,7 +2,7 @@
 using System.Linq;
 using Mathematics.d2;
 
-namespace SharpStudioAvalonia.Editor;
+namespace SharpStudioAvalonia.Lumen;
 
 public class AnchorGroup
 {
@@ -29,7 +29,6 @@ public class AnchorGroup
 
     public void Save(int index = -1)
     {
-        // if (index < 0 || index >= Anchors.Count) return;
         _selectedIndex = index;
         CachedShape = ShapeTools.Clone(Shape);
     }

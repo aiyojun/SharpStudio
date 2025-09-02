@@ -4,7 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using SharpStudioAvalonia.Editor;
+using SharpStudioAvalonia.Lumen;
 
 namespace SharpStudioAvalonia.Views;
 
@@ -40,14 +40,11 @@ public partial class MainWindow : Window
         Console.WriteLine($"sender {sender}");
         if (Equals(sender, ModuleInspection))
         {
-            ContentControl.Content = new Palette { Source = new Bitmap(AssetLoader.Open(new Uri("avares://SharpStudioAvalonia/Assets/chessboard.png"))) };  // new TextBlock { Text = "检测模块" };
+            ContentControl.Content = new Tablet { Source = new Bitmap(AssetLoader.Open(new Uri("avares://SharpStudioAvalonia/Assets/chessboard.png"))), ImageLayout = ImageLayout.Contain };
         }
         else if (Equals(sender, ModuleHistory))
         {
-            // ContentControl.Content = new TextBlock { Text = "历史模块" };
-            ContentControl.Content = new Tablet() { Source = new Bitmap(AssetLoader.Open(new Uri("avares://SharpStudioAvalonia/Assets/chessboard.png"))) };
-            
-            
+            ContentControl.Content = new TextBlock { Text = "历史模块" };
         }
         else if (Equals(sender, ModulePostprocess))
         {

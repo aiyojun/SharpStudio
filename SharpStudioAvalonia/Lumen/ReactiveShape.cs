@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace SharpStudioAvalonia.Editor;
+namespace SharpStudioAvalonia.Lumen;
 
 public class ReactiveShape : INotifyPropertyChanged
 {

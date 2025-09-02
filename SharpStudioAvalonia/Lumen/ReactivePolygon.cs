@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Mathematics.d2;
 
-namespace SharpStudioAvalonia.Editor;
+namespace SharpStudioAvalonia.Lumen;
 
 public class ReactivePolygon : ReactiveShape
 {

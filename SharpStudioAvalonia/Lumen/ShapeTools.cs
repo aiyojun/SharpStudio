@@ -2,7 +2,7 @@
 using System.Linq;
 using Mathematics.d2;
 
-namespace SharpStudioAvalonia.Editor;
+namespace SharpStudioAvalonia.Lumen;
 
 public static class ShapeTools
 {

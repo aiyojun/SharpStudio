@@ -12,7 +12,7 @@ using Mathematics.d2;
 using SharpStudioAvalonia.Views;
 using Point = Avalonia.Point;
 
-namespace SharpStudioAvalonia.Editor;
+namespace SharpStudioAvalonia.Lumen;
 
 public class Tablet : Control
 {
@@ -52,14 +52,9 @@ public class Tablet : Control
 
     private readonly AvaloniaList<ReactiveShape> _shapes =
     [
-        new ReactiveRectangle
-            { X = 300, Y = 500, Width = 100, Height = 60, Color = "#fff", Id = "xxxx", Label = "Defect" },
-        new ReactiveCircle { X = 500, Y = 200, Radius = 60, Color = "#fff", Id = "xxxx", Label = "Defect" },
-        new ReactivePolygon
-        {
-            Points = [new Mathematics.d2.Point(50, 50), new Mathematics.d2.Point(150, 250), new Mathematics.d2.Point(70, 170)],
-            Color = "#fff", Id = "xxxx", Label = "Defect"
-        }
+        new ReactiveRectangle { X = 300, Y = 500, Width = 100, Height = 60, Color = "#55ffff", Id = "xxxx", Label = "Defect" },
+        new ReactiveCircle { X = 500, Y = 200, Radius = 60, Color = "#ffff55", Id = "xxxx", Label = "Defect" },
+        new ReactivePolygon { Points = [new Mathematics.d2.Point(50, 50), new Mathematics.d2.Point(150, 250), new Mathematics.d2.Point(70, 170)], Color = "#ff55ee", Id = "xxxx", Label = "Defect" }
     ];
 
     public Tablet()
@@ -396,8 +391,7 @@ public class Tablet : Control
         for (var i = anchors.Count - 1; i >= 0; i--)
         {
             var anchor = anchors[i];
-            var inArea = ShapeTools.InCircle(point,
-                new ReactiveCircle { X = anchor.X, Y = anchor.Y, Radius = AnchorRadius });
+            var inArea = ShapeTools.InCircle(point, new ReactiveCircle { X = anchor.X, Y = anchor.Y, Radius = AnchorRadius / _camera.Scale });
             if (inArea) return i;
         }
 
@@ -434,7 +428,7 @@ public class Tablet : Control
     private static IBrush ConvertColor(string color, byte alpha = 0xff)
     {
         color = color.Replace("#", "");
-        if (color.Length != 6) color = "00ff00";
+        if (color.Length != 6) color = "eeeeee";
         return new SolidColorBrush(Color.FromArgb(alpha, Convert.ToByte(color[..2], 16), Convert.ToByte(color.Substring(2, 2), 16), Convert.ToByte(color.Substring(4, 2), 16)));
     }
 }

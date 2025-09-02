@@ -1,4 +1,4 @@
-﻿namespace SharpStudioAvalonia.Editor;
+﻿namespace SharpStudioAvalonia.Lumen;
 
 public enum ImageLayout
 {

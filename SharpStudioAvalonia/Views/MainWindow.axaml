@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:SharpStudioAvalonia.Views"
+        xmlns:lumen="clr-namespace:SharpStudioAvalonia.Lumen"
         mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="640"
         x:Class="SharpStudioAvalonia.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -112,7 +113,7 @@
                     
                     <ContentControl x:Name="ContentControl" Grid.Column="1">
                         <views:Flowchart></views:Flowchart>
-                        <!-- <views:Palette Source="C:/Users/jun.dai/Documents/GitHub/SharpStudio/SharpStudioWpf/chessboard.png" />     -->
+                        <!-- <lumen:Tablet Source="D:/GitHub/SharpStudio/SharpStudioWpf/chessboard.png" />     -->
                     </ContentControl>
                 </Grid>
             </DockPanel>
