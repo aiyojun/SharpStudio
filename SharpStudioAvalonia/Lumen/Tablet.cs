@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Collections;
@@ -15,15 +16,28 @@ using Point = Avalonia.Point;
 
 namespace SharpStudioAvalonia.Lumen;
 
+/// <summary>
+/// The interactive graphic drawing board.
+/// </summary>
 public class Tablet : Control
 {
+    /// <summary>
+    /// Defines chessboard tile size.
+    /// </summary>
     public static readonly StyledProperty<int> TileProperty = AvaloniaProperty.Register<Tablet, int>(nameof(Tile), 15);
-
-    public static readonly StyledProperty<IList<ReactiveShape>> ShapesProperty = AvaloniaProperty.Register<Tablet, IList<ReactiveShape>>(nameof(Shapes), new AvaloniaList<ReactiveShape>());
-    
+    /// <summary>
+    /// Defines background image.
+    /// </summary>
     public static readonly StyledProperty<IImage?> SourceProperty = AvaloniaProperty.Register<Tablet, IImage?>(nameof(Source));
-    
+    /// <summary>
+    /// Defines background image's layout method.
+    /// </summary>
     public static readonly StyledProperty<ImageLayout> ImageLayoutProperty = AvaloniaProperty.Register<Tablet, ImageLayout>(nameof(ImageLayout), ImageLayout.Cover);
+    /// <summary>
+    /// Defines graphics data.
+    /// </summary>
+    [TypeConverter(typeof(ReactiveShapeConverter))]
+    public static readonly StyledProperty<IList<ReactiveShape>> ShapesProperty = AvaloniaProperty.Register<Tablet, IList<ReactiveShape>>(nameof(Shapes), new AvaloniaList<ReactiveShape>());
     
     public int Tile
     {
@@ -61,17 +75,6 @@ public class Tablet : Control
     static Tablet()
     {
         AffectsRender<Tablet>(SourceProperty, TileProperty, ShapesProperty, ImageLayoutProperty);
-    }
-
-    public Tablet()
-    {
-        Loaded += (_, _) =>
-        {
-            if (window != null)
-            {
-                window!.KeyDown += OnKeyDown;
-            }
-        };
     }
 
     private Window? window => this.GetVisualRoot() as Window;
@@ -362,6 +365,10 @@ public class Tablet : Control
     {
         base.OnLoaded(e);
         SetupImageLayout(ImageLayout);
+        if (window != null)
+        {
+            window!.KeyDown += OnKeyDown;
+        }
     }
 
     private int InShape(Mathematics.d2.Point point)
@@ -382,7 +389,7 @@ public class Tablet : Control
         return -1;
     }
 
-    public int InAnchor(Mathematics.d2.Point point)
+    private int InAnchor(Mathematics.d2.Point point)
     {
         if (_anchorGroup == null) return -1;
         var anchors = _anchorGroup.Anchors;
