@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
+using Mathematics.d2;
+using SharpStudioAvalonia.Views;
 
 namespace SharpStudioAvalonia.Editor;
 
@@ -12,24 +13,24 @@ public class ShapeLayer
 {
     public Canvas Self { get; set; }
     public Canvas Parent { get; set; }
-    public ViewportMatrix2D Viewport { get; set; }
+    public Camera Camera { get; set; }
     public readonly List<ReactiveShape> Shapes = [];
     private readonly Dictionary<ReactiveShape, Shape> _views = new();
     public AnchorRelation? AnchorRelation;
     private int _selectedShapeIndex = -1;
     
-    public ShapeLayer(Canvas self, Canvas parent, ViewportMatrix2D viewport)
+    public ShapeLayer(Canvas self, Canvas parent, Camera camera)
     {
         Self = self;
         Parent = parent;
         // SetupGeometry();
-        Viewport = viewport;
-        Viewport.PropertyChanged += HandleViewportChange;
+        Camera = camera;
+        Camera.PropertyChanged += HandleCameraChange;
     }
 
     ~ShapeLayer()
     {
-        Viewport.PropertyChanged -= HandleViewportChange;
+        Camera.PropertyChanged -= HandleCameraChange;
     }
     
     public void Render()
@@ -80,7 +81,7 @@ public class ShapeLayer
     {
         if (index < 0 || index >= Shapes.Count) return;
         Deselect();
-        AnchorRelation = new AnchorRelation(Self, Shapes[index], Viewport);
+        AnchorRelation = new AnchorRelation(Self, Shapes[index], Camera);
         _selectedShapeIndex = index;
         Render();
     }
@@ -115,14 +116,12 @@ public class ShapeLayer
 
     public void RemoveShape(ReactiveShape shape)
     {
-        if (!_views.ContainsKey(shape)) return;
-        var view = _views[shape];
-        _views.Remove(shape);
+        if (!_views.Remove(shape, out var view)) return;
         Self.Children.Remove(view);
         Shapes.Remove(shape);
     }
 
-    private void HandleViewportChange(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
+    private void HandleCameraChange(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
     {
         Render();
     }
@@ -135,7 +134,7 @@ public class ShapeLayer
             var polygonView = view as Polygon;
             for (var i = 0; i < 4; i++)
             {
-                var p = Viewport.Relative(ShapeTools.GetRectangleAnchor(rectangle, i * 2));
+                var p = Camera.ConvertToScreen(ShapeTools.GetRectangleAnchor(rectangle, i * 2)).ToAvaloniaPoint();
                 if (i >= polygonView!.Points.Count)
                     polygonView.Points.Add(p);
                 else 
@@ -144,10 +143,10 @@ public class ShapeLayer
         }
         else if (shape is ReactiveCircle circle)
         {
-            view.Width = circle.Radius * 2 * Viewport.Scale;
-            view.Height = circle.Radius * 2 * Viewport.Scale;
-            Canvas.SetLeft(view, (circle.X - circle.Radius) * Viewport.Scale + Viewport.OffsetX);
-            Canvas.SetTop(view, (circle.Y - circle.Radius) * Viewport.Scale + Viewport.OffsetY);
+            view.Width = circle.Radius * 2 * Camera.Scale;
+            view.Height = circle.Radius * 2 * Camera.Scale;
+            Canvas.SetLeft(view, (circle.X - circle.Radius) * Camera.Scale + Camera.X);
+            Canvas.SetTop(view, (circle.Y - circle.Radius) * Camera.Scale + Camera.Y);
         } 
         else if (shape is ReactivePolygon polygon)
         {
@@ -155,7 +154,7 @@ public class ShapeLayer
             for (var i = 0; i < polygon.Points.Count; i++)
             {
                 var abs = polygon.Points[i];
-                var rel = Viewport.Relative(abs.X, abs.Y);
+                var rel = Camera.ConvertToScreen(abs).ToAvaloniaPoint();
                 var collection = polygonView!.Points;
                 if (i < collection.Count)
                     collection[i] = rel;

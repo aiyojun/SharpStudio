@@ -4,9 +4,10 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
 using Avalonia.VisualTree;
+using Mathematics.d2;
 using SharpStudioAvalonia.Editor;
+using Point = Mathematics.d2.Point;
 
 namespace SharpStudioAvalonia.Views;
 
@@ -21,7 +22,7 @@ public partial class Palette : UserControl
 
     private readonly ImageLayer _imageLayer;
     private readonly ShapeLayer _shapeLayer;
-    private readonly ViewportMatrix2D _viewport = new();
+    private readonly Camera _camera = new();
     private readonly CursorState _cursor = new();
     private Tuple<ReactiveShape, ReactiveShape>? _shape;
     private DrawAction _drawAction = DrawAction.None;
@@ -30,15 +31,13 @@ public partial class Palette : UserControl
     public Palette()
     {
         InitializeComponent();
-        _imageLayer = new ImageLayer(ImageLayer, Container, TargetImage, _viewport);
-        _shapeLayer = new ShapeLayer(ShapeLayer, Container, _viewport);
-
+        _imageLayer = new ImageLayer(ImageLayer, Container, TargetImage, _camera);
+        _shapeLayer = new ShapeLayer(ShapeLayer, Container, _camera);
 
         Loaded += (_, _) =>
         {
             if (window != null)
             {
-                Console.WriteLine($" Window {window}");
                 window!.KeyDown += OnKeyDown;
             }
         };
@@ -49,7 +48,7 @@ public partial class Palette : UserControl
     private void OnMouseWheel(object sender, PointerWheelEventArgs e)
     {
         var point = e.GetCurrentPoint(this);
-        _viewport.ZoomTo(_viewport.Scale * (e.Delta.Y > 0 ? 1.1 : 0.9), point.Position);
+        _camera.ZoomTo(_camera.Scale * (e.Delta.Y > 0 ? 1.1 : 0.9), point.Position.ToD2Point());
     }
     
     private void OnMouseDown(object? sender, PointerPressedEventArgs e)
@@ -58,12 +57,12 @@ public partial class Palette : UserControl
         // Console.WriteLine($"Visual Tree : {ApplicationHelper.Window.Content}");
         // ApplicationHelper.PrintVisualTree(ApplicationHelper.Window.Content as DependencyObject);
         var cursorPoint = e.GetCurrentPoint(this);
-        var cursor = cursorPoint.Position;
+        var cursor = cursorPoint.Position.ToD2Point();
         var cursorProps = cursorPoint.Properties;
-        var coord = _viewport.Absolute(cursor);
-        _cursor.Start = cursor;
-        var withCtrl = e.KeyModifiers.HasFlag(KeyModifiers.Control); //(Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
-        if (cursorProps.IsLeftButtonPressed)  // if (e.LeftButton == MouseButtonState.Pressed)
+        var coord = _camera.ConvertToWorld(cursor);
+        _cursor.Save(cursor);
+        var withCtrl = e.KeyModifiers.HasFlag(KeyModifiers.Control);
+        if (cursorProps.IsLeftButtonPressed)
         {
             var selectedShapeIndex = _shapeLayer.InShape(coord);
             var selectedAnchorIndex = _shapeLayer.InAnchor(coord);
@@ -125,7 +124,7 @@ public partial class Palette : UserControl
             }
             
         }
-        else if (cursorProps.IsRightButtonPressed)  // else if (e.RightButton == MouseButtonState.Pressed)
+        else if (cursorProps.IsRightButtonPressed)
         {
             _cursor.Buttons = 2; 
             if (_drawMode == DrawMode.DrawPolygon)
@@ -141,23 +140,22 @@ public partial class Palette : UserControl
                 _shape = null;
             }
         }
-        else if (cursorProps.IsMiddleButtonPressed)  // else if (e.MiddleButton == MouseButtonState.Pressed)
+        else if (cursorProps.IsMiddleButtonPressed)
         {
             _cursor.Buttons = 4; 
-            _viewport.Save(cursor);
+            _camera.Save(cursor);
             _drawAction = DrawAction.DragPalette;
         }
-        // CapturePointer(e.Pointer); // CaptureMouse();
     }
     
     private void OnMouseMove(object? sender, PointerEventArgs e)
     {
         var cursorPoint = e.GetCurrentPoint(this);
-        var cursor = cursorPoint.Position;
-        var coord = _viewport.Absolute(cursor);
+        var cursor = cursorPoint.Position.ToD2Point();
+        var coord = _camera.ConvertToWorld(cursor);
         if (_drawAction == DrawAction.DragPalette)
         {
-            _viewport.MoveTo(cursor);
+            _camera.MoveTo(cursor);
         }
         else if (_drawAction == DrawAction.DragAnchor)
         {
@@ -165,14 +163,14 @@ public partial class Palette : UserControl
         }
         else if (_drawAction == DrawAction.DragShape)
         {
-            ShapeTools.MoveShape(_shape!.Item2, _shape.Item1, Vector2D.Subtract(coord, _viewport.Absolute((Point)_cursor.Start!)));
+            ShapeTools.MoveShape(_shape!.Item2, _shape.Item1, coord - _camera.ConvertToWorld(_cursor.Start));
         }
         else if (_drawAction == DrawAction.DrawShape && _drawMode == DrawMode.DrawRectangle)
         {
             var rectangle = _shape!.Item1 as ReactiveRectangle;
             var copy = _shape.Item2 as ReactiveRectangle;
             var start = new Point(copy!.X - copy.Width * 0.5, copy.Y - copy.Height * 0.5);
-            var end = _viewport.Absolute(cursor);
+            var end = _camera.ConvertToWorld(cursor);
             var width = Math.Abs(start.X - end.X);
             var height = Math.Abs(start.Y - end.Y);
             rectangle!.X = Math.Min(start.X, end.X) + width * .5;
@@ -185,8 +183,8 @@ public partial class Palette : UserControl
             var circle = _shape!.Item1 as ReactiveCircle;
             var copy = _shape.Item2 as ReactiveCircle;
             var start = new Point(copy!.X, copy.Y);
-            var end = _viewport.Absolute(cursor);
-            circle!.Radius = Vector2D.Subtract(end, start).Length;
+            var end = _camera.ConvertToWorld(cursor);
+            circle!.Radius = (end - start).Length;
         }
         else if (_drawMode == DrawMode.DrawPolygon && _shape != null)
         {
@@ -199,9 +197,9 @@ public partial class Palette : UserControl
     private void OnMouseUp(object? sender, PointerReleasedEventArgs e)
     {
         var cursorPoint = e.GetCurrentPoint(this);
-        var cursor = cursorPoint.Position;
-        if (_cursor.Start == null) return;
-        var shake = Vector2D.Subtract(cursor, (Point)_cursor.Start!).Length; 
+        var cursor = cursorPoint.Position.ToD2Point();
+        // if (_cursor.Start == null) return;
+        var shake = (cursor - _cursor.Start).Length; 
         if (shake <= 5)
         {
             if (_drawAction == DrawAction.DrawShape && _drawMode is DrawMode.DrawRectangle or DrawMode.DrawCircle)
@@ -217,7 +215,6 @@ public partial class Palette : UserControl
         }
         _drawAction = DrawAction.None;
         e.Handled = true;
-        // Console.WriteLine($"{Container.FocusState}");
     }
     
     private void OnKeyDown(object sender, KeyEventArgs e)
@@ -229,7 +226,6 @@ public partial class Palette : UserControl
             Key.D3 => DrawMode.DrawPolygon,
             _ => _drawMode
         };
-        Console.WriteLine($"KeyDown : {e.Key}");
         if (e.Key == Key.D)
         {
             // Console.WriteLine(JsonConvert.SerializeObject(ApplicationHelper.DumpToJson(ApplicationHelper.Window.Content), Formatting.Indented));

@@ -6,7 +6,7 @@ public class ReactiveRectangle : ReactiveShape
     private double _y;
     private double _width;
     private double _height;
-    private double _rotation = 0;
+    private double _rotation;
     
     public double X
     {

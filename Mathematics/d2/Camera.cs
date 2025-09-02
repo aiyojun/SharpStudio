@@ -8,8 +8,11 @@ public class Camera : INotifyPropertyChanged
     private double _x;
     private double _y;
     private double _scale = 1.0;
-    private readonly double[] _cache  = new double[3];
-    private readonly double[] _cursor = new double[2];
+    private double _cachedX;
+    private double _cachedY;
+    private double _cachedScale;
+    private double _cursorX;
+    private double _cursorY;
     
     public double X
     {
@@ -50,20 +53,20 @@ public class Camera : INotifyPropertyChanged
 
     public void Save(Point cursor)
     {
-        (_cache[0], _cache[1], _cache[2]) = (X, Y, Scale);
-        (_cursor[0], _cursor[1]) = (cursor.X, cursor.Y);
+        (_cachedX, _cachedY, _cachedScale) = (X, Y, Scale);
+        (_cursorX, _cursorY) = (cursor.X, cursor.Y);
     }
 
     public void MoveTo(Point end)
     {
-        (X, Y) = (_cache[0] + end.X - _cursor[0], _cache[1] + end.Y - _cursor[1]);
+        (X, Y) = (_cachedX + end.X - _cursorX, _cachedY + end.Y - _cursorY);
     }
 
     public void Reset()
     {
         (X, Y,  Scale) = (0, 0, 1.0);
-        Array.Fill(_cache, 0);
-        Array.Fill(_cursor, 0);
+        (_cachedX, _cachedY, _cachedScale) = (0, 0, 1.0);
+        (_cursorX, _cursorY) = (0, 0);
     }
     
     public Point ConvertToWorld(Point point) => new((point.X - X) / Scale, (point.Y - Y) / Scale);

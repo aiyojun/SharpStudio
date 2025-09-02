@@ -4,25 +4,27 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Mathematics.d2;
+using Point = Avalonia.Point;
 
 namespace SharpStudioAvalonia.Editor;
 
 public class ImageLayer
 {
-    public ViewportMatrix2D Viewport { get; set; }
+    public Camera Camera { get; set; }
     
     public readonly Image BackgroundImage;
     public Canvas Self { get; set; }
     public Canvas Parent { get; set; }
     
-    public ImageLayer(Canvas self, Canvas parent, Image bg, ViewportMatrix2D viewport)
+    public ImageLayer(Canvas self, Canvas parent, Image bg, Camera camera)
     {
         Self = self;
         Parent = parent;
-        Viewport = viewport;
+        Camera = camera;
         BackgroundImage = bg;
         // SetupGeometry();
-        Viewport.PropertyChanged += HandleViewChange;
+        Camera.PropertyChanged += HandleViewChange;
         
         // Loaded += (sender, args) =>
         // {
@@ -32,7 +34,7 @@ public class ImageLayer
     
     ~ImageLayer()
     {
-        Viewport.PropertyChanged -= HandleViewChange;
+        Camera.PropertyChanged -= HandleViewChange;
     }
 
     public ImageLayer Load(string path)
@@ -91,8 +93,8 @@ public class ImageLayer
         var transform = (MatrixTransform) Self.RenderTransform;
         // var matrix = new Matrix{ M11 = Viewport.Scale, M22 = Viewport.Scale, OffsetX = Viewport.OffsetX, OffsetY = Viewport.OffsetY };
         // var matrix = new Matrix();
-        var s = Matrix.CreateScale(Viewport.Scale, Viewport.Scale);
-        var t = Matrix.CreateTranslation(Viewport.OffsetX, Viewport.OffsetY);
+        var s = Matrix.CreateScale(Camera.Scale, Camera.Scale);
+        var t = Matrix.CreateTranslation(Camera.X, Camera.Y);
         // matrix.Scale(Viewport.Scale, Viewport.Scale);
         // matrix.Translate(Viewport.OffsetX, Viewport.OffsetY);
         transform.Matrix = s * t;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Avalonia;
-using SharpStudioAvalonia.Editor;
+using Mathematics.d2;
 
 namespace SharpStudioAvalonia.Editor;
 
@@ -9,7 +8,7 @@ public static class ShapeTools
 {
     public static bool InCircle(Point point, ReactiveCircle circle)
     {
-        return Vector2D.Subtract(new Point(circle.X, circle.Y), point).Length <= circle.Radius;
+        return (new Point(circle.X, circle.Y) - point).Length <= circle.Radius;
     }
 
     public static bool InPolygon(Point point, ReactivePolygon polygon)
@@ -67,7 +66,7 @@ public static class ShapeTools
         };
     }
 
-    public static void MoveShape(ReactiveShape start, ReactiveShape shape, Vector2D delta)
+    public static void MoveShape(ReactiveShape start, ReactiveShape shape, Vector delta)
     {
         if (start is ReactiveRectangle startRectangle && shape is ReactiveRectangle rectangle)
         {
@@ -89,13 +88,13 @@ public static class ShapeTools
         }
     }
 
-    public static Vector2D GetAngleVector(double degree)
+    public static Vector GetAngleVector(double degree)
     {
         var radian = degree * Math.PI / 180.0;
-        return new Vector2D(Math.Sin(radian), -Math.Cos(radian));
+        return new Vector(Math.Sin(radian), -Math.Cos(radian));
     }
 
-    public static (Vector2D projection, Vector2D perpendicular) Decompose(Vector2D direction, Vector2D diagonal)
+    public static (Vector projection, Vector perpendicular) Decompose(Vector direction, Vector diagonal)
     {
         var distance = direction.Length;
         if (distance == 0)
@@ -130,6 +129,18 @@ public static class ShapeTools
         };
     }
 
+    public static Point GetCircleAnchor(ReactiveCircle circle, int index)
+    {
+        return index switch
+        {
+            0 => new Point(circle.X, circle.Y - circle.Radius),
+            1 => new Point(circle.X + circle.Radius, circle.Y),
+            2 => new Point(circle.X, circle.Y + circle.Radius),
+            3 => new Point(circle.X - circle.Radius, circle.Y),
+            _ => throw new Exception("invalid index"),
+        };
+    }
+
     public static double NormalizeAngle(double degree)
     {
         var deg = degree;
@@ -138,7 +149,7 @@ public static class ShapeTools
         return deg;
     }
 
-    public static double CalculateVectorClockwiseAngle(Vector2D v1, Vector2D v2)
+    public static double CalculateVectorClockwiseAngle(Vector v1, Vector v2)
     {
         return NormalizeAngle((Math.Atan2(v2.Y, v2.X) - Math.Atan2(v1.Y, v1.X)) / Math.PI * 180);
     }

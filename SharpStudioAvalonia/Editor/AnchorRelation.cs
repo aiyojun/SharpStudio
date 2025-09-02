@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
+using Mathematics.d2;
 
 namespace SharpStudioAvalonia.Editor;
 
@@ -14,7 +14,7 @@ public sealed class AnchorRelation : INotifyPropertyChanged, IDisposable
 {
     private readonly Canvas _parent;
     
-    private readonly ViewportMatrix2D _viewport;
+    private readonly Camera _camera;
 
     private readonly ReactiveShape _shape;
     
@@ -31,11 +31,11 @@ public sealed class AnchorRelation : INotifyPropertyChanged, IDisposable
     private Point? _cachedAnchor;
     private ReactiveShape? _cachedShape;
 
-    public AnchorRelation(Canvas parent, ReactiveShape shape, ViewportMatrix2D viewport)
+    public AnchorRelation(Canvas parent, ReactiveShape shape, Camera camera)
     {
         _parent = parent;
         _shape = shape;
-        _viewport = viewport;
+        _camera = camera;
         Bind();
     }
 
@@ -89,7 +89,7 @@ public sealed class AnchorRelation : INotifyPropertyChanged, IDisposable
         }
         else if (_shape is ReactiveCircle circle)
         {
-            circle.Radius = Vector2D.Subtract(point, new Point(circle.X, circle.Y)).Length;
+            circle.Radius = (point - new Point(circle.X, circle.Y)).Length;
         }
         else if (_shape is ReactivePolygon polygon)
         {
@@ -112,7 +112,7 @@ public sealed class AnchorRelation : INotifyPropertyChanged, IDisposable
     {
         for (var i = 0; i < _anchors.Count; i++)
         {
-            var point = _viewport.Relative(_anchors[i]);
+            var point = _camera.ConvertToScreen(_anchors[i]);
             if (i < _views.Count)
             {
                 var view = _views[i];
@@ -210,7 +210,7 @@ public sealed class AnchorRelation : INotifyPropertyChanged, IDisposable
         if (fixedPointIndex is < 0 or > 7) return;
         int[] indices = [4, 5, 6, 7, 0, 1, 2, 3];
         var fixedPoint = ShapeTools.GetRectangleAnchor(rectangle, indices[fixedPointIndex]);
-        var diagonalVector = Vector2D.Subtract(point, fixedPoint);
+        var diagonalVector = point - fixedPoint;
         if (fixedPointIndex % 2 == 0)
         {
             var directionVector = ShapeTools.GetAngleVector(start.Rotation);
@@ -235,7 +235,7 @@ public sealed class AnchorRelation : INotifyPropertyChanged, IDisposable
     {
         var startAngle = start.Rotation;
         var baseVector = ShapeTools.GetAngleVector(start.Rotation);
-        var deltaAngle = ShapeTools.CalculateVectorClockwiseAngle(baseVector, Vector2D.Subtract(point, new Point(start.X, start.Y)));
+        var deltaAngle = ShapeTools.CalculateVectorClockwiseAngle(baseVector, point - new Point(start.X, start.Y));
         rectangle.Rotation = ShapeTools.NormalizeAngle(startAngle + deltaAngle);
     }
 }
